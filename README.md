@@ -26,6 +26,7 @@ If an import error for the object detection api comes up regarding builder.py, y
 ## Image Processing
 To preprocess the images, run `python scripts/image_resizing.py`
 This should resize all the images to be 1000x1000 pixels and place them in `dataset/images/resized_images`
+
 ## Object detection
 To construct the dataset, you must first label the image set by running `labelImg dataset/images/resized_images` and setting the save_dir to `dataset/labels`. If the label map is not created and located at `dataset/label_map.pbtxt` it must be created.
 
@@ -42,3 +43,6 @@ Afterwards, tf records will need to be created, so run
 python scripts/generate_tfrecord.py -x dataset/train -l dataset/label_map.pbtxt -o dataset/train.record
 python scripts/generate_tfrecord.py -x dataset/test -l dataset/label_map.pbtxt -o dataset/test.record
 ```
+
+## Model Download
+- [Object detection](http://download.tensorflow.org/models/object_detection/tf2/20200711/ssd_resnet152_v1_fpn_1024x1024_coco17_tpu-8.tar.gz)

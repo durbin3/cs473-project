@@ -132,3 +132,4 @@ dmypy.json
 dataset/images/
 dataset/train
 dataset/test
+models/pretrained_models
