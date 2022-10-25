@@ -1,0 +1,2 @@
+source ./activate
+pip install -r ./scripts/requirements
