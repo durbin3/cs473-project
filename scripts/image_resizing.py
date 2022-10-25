@@ -5,8 +5,8 @@ import os
 
 def main():
     size = (1000,1000)
-    directory = '../raw_images'
-    out_dir = '../resized_images'
+    directory = '../dataset/images/raw_images'
+    out_dir = '../dataset/images/resized_images'
     if not os.path.exists(out_dir): os.makedirs(out_dir)
 
     for file in os.listdir(directory):
