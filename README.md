@@ -21,13 +21,16 @@ CS473-Project
 └─ ...
 ```
 
-If an import error for the object detection api comes up regarding builder.py, you may need to run `source scripts/protobuf_fix`
 
 ## Image Processing
 To preprocess the images, run `python scripts/image_resizing.py`
-This should resize all the images to be 1000x1000 pixels and place them in `dataset/images/resized_images`
+This should resize all the images to be 1024x1024 pixels and place them in `dataset/images/resized_images`
 
 ## Object detection
+Object detection requires a specific tensorflow package that must be installed manually (unfortunately). To do so, follow [this guide](https://tensorflow-object-detection-api-tutorial.readthedocs.io/en/latest/install.html#tensorflow-object-detection-api-installation)
+
+If an import error for the object detection api comes up regarding builder.py, you may need to run `source scripts/protobuf_fix`
+
 To construct the dataset, you must first label the image set by running `labelImg dataset/images/resized_images` and setting the save_dir to `dataset/labels`. If the label map is not created and located at `dataset/label_map.pbtxt` it must be created.
 
 Then you must merge the set of labels and their corresponding images into `dataset/images/labeled_images`.

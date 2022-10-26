@@ -133,3 +133,5 @@ dataset/images/
 dataset/train
 dataset/test
 models/pretrained_models
+dataset/train.record
+dataset/test.record
