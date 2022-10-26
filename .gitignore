@@ -135,3 +135,5 @@ dataset/test
 models/pretrained_models
 dataset/train.record
 dataset/test.record
+.idea
+.DS_STORE
