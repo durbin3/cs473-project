@@ -31,7 +31,7 @@ Here's a list of scripts and their descriptions for what they do, in approximate
 - `scripts/export_object_detection`: takes the most recent checkpoint of the object detection model and exports it to a finalized prediction model.
 
 ## Image Processing
-To preprocess the images, run `python scripts/image_resizing.py process 1024`
+To preprocess the images, run `python src/image_resizing.py process 1024`
 This should resize all the images to be 1024x1024 pixels and place them in `dataset/images/resized_images`
 
 ## Object detection

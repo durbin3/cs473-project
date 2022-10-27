@@ -1,6 +1,6 @@
 if [ ! -d "dataset/images/resized_images" ]
 then
-    echo "Resizing Images" && python scripts/image_resizing.py;
+    echo "Resizing Images" && python src/image_resizing.py;
 fi
 
 if [ -d "dataset/images/labeled_images" ]
@@ -27,6 +27,6 @@ do
     image=$(find dataset/images/resized_images -name ${file:0:3}*)
     cp $image dataset/images/labeled_images/${image: -7}
 done
-python scripts/partition_dataset.py -i dataset/images/labeled_images/ -o dataset -r .3 -x
-python scripts/generate_tfrecord.py -x dataset/train -l dataset/label_map.pbtxt -o dataset/train.record
-python scripts/generate_tfrecord.py -x dataset/test -l dataset/label_map.pbtxt -o dataset/test.record
+python src/od_partition_dataset.py -i dataset/images/labeled_images/ -o dataset -r .3 -x
+python src/generate_tfrecord.py -x dataset/train -l dataset/label_map.pbtxt -o dataset/train.record
+python src/generate_tfrecord.py -x dataset/test -l dataset/label_map.pbtxt -o dataset/test.record
