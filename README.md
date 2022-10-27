@@ -45,4 +45,5 @@ python scripts/generate_tfrecord.py -x dataset/test -l dataset/label_map.pbtxt -
 ```
 
 ## Model Download
+- [Setup tutorial](https://tensorflow-object-detection-api-tutorial.readthedocs.io/en/latest/training.html)
 - [Object detection](http://download.tensorflow.org/models/object_detection/tf2/20200711/ssd_resnet152_v1_fpn_1024x1024_coco17_tpu-8.tar.gz)
