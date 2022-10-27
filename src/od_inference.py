@@ -30,6 +30,10 @@ def load_image_into_numpy_array(path): return np.array(Image.open(path))
 
 
 print('Loading model...', end='')
+if not os.path.exists(PATH_TO_SAVED_MODEL):
+    print("\nError, no saved model found")
+    exit()
+
 start_time = time.time()
 # Load saved model and build the detection function
 detect_fn = tf.saved_model.load(PATH_TO_SAVED_MODEL)
@@ -37,40 +41,22 @@ end_time = time.time()
 elapsed_time = end_time - start_time
 print('Done! Took {} seconds'.format(elapsed_time))
 category_index = label_map_util.create_category_index_from_labelmap(PATH_TO_LABELS, use_display_name=True)
-  
+
 for image_path in IMAGE_PATHS:
-
     print('Running inference for {}... '.format(image_path), end='')
-
     image_np = load_image_into_numpy_array(image_path)
-
-    # Things to try:
-    # Flip horizontally
-    # image_np = np.fliplr(image_np).copy()
-
-    # Convert image to grayscale
-    # image_np = np.tile(
-    #     np.mean(image_np, 2, keepdims=True), (1, 1, 3)).astype(np.uint8)
-
-    # The input needs to be a tensor, convert it using `tf.convert_to_tensor`.
-    input_tensor = tf.convert_to_tensor(image_np)
-    # The model expects a batch of images, so add an axis with `tf.newaxis`.
-    input_tensor = input_tensor[tf.newaxis, ...]
-
+    input_tensor = tf.convert_to_tensor(image_np)   # The input needs to be a tensor, convert it using `tf.convert_to_tensor`.
+    input_tensor = input_tensor[tf.newaxis, ...]    # The model expects a batch of images, so add an axis with `tf.newaxis`.
     # input_tensor = np.expand_dims(image_np, 0)
-    detections = detect_fn(input_tensor)
 
+    detections = detect_fn(input_tensor)
     # All outputs are batches tensors.
     # Convert to numpy arrays, and take index [0] to remove the batch dimension.
     # We're only interested in the first num_detections.
     num_detections = int(detections.pop('num_detections'))
-    detections = {key: value[0, :num_detections].numpy()
-                   for key, value in detections.items()}
+    detections = {key: value[0, :num_detections].numpy() for key, value in detections.items()}
     detections['num_detections'] = num_detections
-
-    # detection_classes should be ints.
-    detections['detection_classes'] = detections['detection_classes'].astype(np.int64)
-
+    detections['detection_classes'] = detections['detection_classes'].astype(np.int64)  # detection_classes should be ints.
     image_np_with_detections = image_np.copy()
 
     viz_utils.visualize_boxes_and_labels_on_image_array(
