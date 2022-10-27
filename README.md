@@ -38,6 +38,7 @@ Object detection requires a specific tensorflow package that must be installed m
 
 If an import error for the object detection api comes up regarding builder.py, you may need to run `source scripts/protobuf_fix`
 
+If an error pops up relating to tensorflow not being able to find {CUDA_DIR}, you may need to go to the directory where CUDA is, and copy-paste the `nvvm` folder into this project's source directory.
 
 ## Model Installation
 Here's a list of all the models used
