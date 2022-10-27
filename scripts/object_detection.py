@@ -37,7 +37,7 @@ end_time = time.time()
 elapsed_time = end_time - start_time
 print('Done! Took {} seconds'.format(elapsed_time))
 category_index = label_map_util.create_category_index_from_labelmap(PATH_TO_LABELS, use_display_name=True)
-
+  
 for image_path in IMAGE_PATHS:
 
     print('Running inference for {}... '.format(image_path), end='')
