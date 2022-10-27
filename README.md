@@ -20,30 +20,29 @@ CS473-Project
 ├─ venv
 └─ ...
 ```
+All else fails follow this: [Setup tutorial](https://tensorflow-object-detection-api-tutorial.readthedocs.io/en/latest/training.html)
+
+## Premade Scripts
+Here's a list of scripts and their descriptions for what they do, in approximate order of when you will probably run them:
+- `scripts/setup`: used to install most packages
+- `scripts/protobuf_fix`: steals a build file from a later version of protobuf that is used for the object detection api
+- `scripts/gen_dataset.sh`: combines the xml labels and resized images and generates a train.record file and a test.record file for inputs to the model training.
+- `scripts/train_object_detection`: runs the object detection training model
+- `scripts/export_object_detection`: takes the most recent checkpoint of the object detection model and exports it to a finalized prediction model.
+
+## Image Processing
+To preprocess the images, run `python scripts/image_resizing.py process 1024`
+This should resize all the images to be 1024x1024 pixels and place them in `dataset/images/resized_images`
+
+## Object detection
+Object detection requires a specific tensorflow package that must be installed manually (unfortunately). To do so, follow [this guide](https://tensorflow-object-detection-api-tutorial.readthedocs.io/en/latest/install.html#tensorflow-object-detection-api-installation)
 
 If an import error for the object detection api comes up regarding builder.py, you may need to run `source scripts/protobuf_fix`
 
-## Image Processing
-To preprocess the images, run `python scripts/image_resizing.py`
-This should resize all the images to be 1000x1000 pixels and place them in `dataset/images/resized_images`
+If an error pops up relating to tensorflow not being able to find {CUDA_DIR}, you may need to go to the directory where CUDA is, and copy-paste the `nvvm` folder into this project's source directory.
 
-## Object detection
-To construct the dataset, you must first label the image set by running `labelImg dataset/images/resized_images` and setting the save_dir to `dataset/labels`. If the label map is not created and located at `dataset/label_map.pbtxt` it must be created.
-
-Then you must merge the set of labels and their corresponding images into `dataset/images/labeled_images`.
-Then run the following command to partition the datset into train-test.
-
-```sh
-python scripts/partition_dataset.py -i dataset/images/labeled_images/ -o dataset -r .3 -x
-```
-
-Afterwards, tf records will need to be created, so run
-
-```sh
-python scripts/generate_tfrecord.py -x dataset/train -l dataset/label_map.pbtxt -o dataset/train.record
-python scripts/generate_tfrecord.py -x dataset/test -l dataset/label_map.pbtxt -o dataset/test.record
-```
-
-## Model Download
-- [Setup tutorial](https://tensorflow-object-detection-api-tutorial.readthedocs.io/en/latest/training.html)
+## Model Installation
+Here's a list of all the models used
 - [Object detection](http://download.tensorflow.org/models/object_detection/tf2/20200711/ssd_resnet152_v1_fpn_1024x1024_coco17_tpu-8.tar.gz)
+
+After downloading, extract the models and place them in the `models/pretrained_models` folder, which you may need to create.
