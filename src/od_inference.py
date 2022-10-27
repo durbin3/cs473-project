@@ -20,13 +20,13 @@ for gpu in gpus:
     tf.config.experimental.set_memory_growth(gpu, True)
 
 
-LABEL_FILENAME = 'dataset/label_map.pbtxt'
-PATH_TO_LABELS = 'dataset/labels'
+LABEL_MAP = 'dataset/label_map.pbtxt'
+PATH_TO_LABELS = 'dataset/labels/'
 IMAGE_PATHS = [file for file in os.listdir('dataset/images/resized_images') if file.endswith(('jpeg', 'png', 'jpg'))]
 PATH_TO_MODEL_DIR = 'models/exported_models/object_detection'
 PATH_TO_SAVED_MODEL = PATH_TO_MODEL_DIR + "/saved_model"
 
-def load_image_into_numpy_array(path): return np.array(Image.open(path))
+def load_image_into_numpy_array(path): return np.array(Image.open(path))[:,:,:3]
 
 
 print('Loading model...', end='')
@@ -40,11 +40,12 @@ detect_fn = tf.saved_model.load(PATH_TO_SAVED_MODEL)
 end_time = time.time()
 elapsed_time = end_time - start_time
 print('Done! Took {} seconds'.format(elapsed_time))
-category_index = label_map_util.create_category_index_from_labelmap(PATH_TO_LABELS, use_display_name=True)
+category_index = label_map_util.create_category_index_from_labelmap(LABEL_MAP, use_display_name=True)
 
+if not os.path.exists('./out'): os.makedirs('./out')
 for image_path in IMAGE_PATHS:
     print('Running inference for {}... '.format(image_path), end='')
-    image_np = load_image_into_numpy_array(image_path)
+    image_np = load_image_into_numpy_array('dataset/images/resized_images/' + image_path)
     input_tensor = tf.convert_to_tensor(image_np)   # The input needs to be a tensor, convert it using `tf.convert_to_tensor`.
     input_tensor = input_tensor[tf.newaxis, ...]    # The model expects a batch of images, so add an axis with `tf.newaxis`.
     # input_tensor = np.expand_dims(image_np, 0)
@@ -72,5 +73,6 @@ for image_path in IMAGE_PATHS:
 
     plt.figure()
     plt.imshow(image_np_with_detections)
+    plt.savefig('./out/'+image_path)
     print('Done')
 plt.show()
