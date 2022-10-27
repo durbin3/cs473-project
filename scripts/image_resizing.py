@@ -58,13 +58,14 @@ def resize_all(size):
 
     # Resize all of the resized images
     print("Resizing images to be " , size)
-    old_size = None
-    for path in in_files:
-        with Image.open(resized_dir+'/'+path) as img:
-            if old_size is None: old_size = img.size
-            out = img.resize(size,resample=Image.Resampling.LANCZOS)
-            out.save(resized_dir+'/'+path,quality=100)
+    if len(in_files) > 0:
+        with Image.open(resized_dir + '/' + in_files[0]) as img:
+            old_size = img.size
+    else:
+        old_size = None
+    process_raw(size)
     print("Images Resized")
+
     # Resize all of the annotations coordinates to match
     if old_size is None: return
     old_width,old_height = old_size
@@ -86,8 +87,7 @@ def resize_all(size):
     print("Labels Resized")
 
 if __name__ == '__main__':
-    print(sys.argv)
-    if len(sys.argv != 3):
+    if len(sys.argv) != 3:
         process_raw((1024,1024))
         exit()
 
