@@ -1,0 +1,1 @@
+python scripts/exporter_main_v2.py --input_type image_tensor --pipeline_config_path ./models/object_detection/pipeline.config --trained_checkpoint_dir ./models/object_detection/ --output_directory ./models/exported_models/object_detection

@@ -132,8 +132,13 @@ dmypy.json
 dataset/images/
 dataset/train
 dataset/test
-models/pretrained_models
 dataset/train.record
 dataset/test.record
 .idea
 .DS_STORE
+models/object_detection/train
+models/object_detection/checkpoint
+models/object_detection/ckpt*
+models/pretrained_models
+models/exported_models
+nvvm
