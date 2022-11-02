@@ -4,9 +4,25 @@ item {
 }
 item {
     id: 2
-    name: 'relationship'
+    name: 'weak_entity'
 }
 item {
     id: 3
-    name: 'attribute'
+    name: 'rel'
+}
+item {
+    id: 4
+    name: 'ident_rel'
+}
+item {
+    id: 5
+    name: 'rel_attr'
+}
+item {
+    id: 6
+    name: 'many'
+}
+item {
+    id: 7
+    name: 'one'
 }

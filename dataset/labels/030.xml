@@ -1,13 +1,13 @@
-<annotation verified="yes">
-	<folder>resized_images</folder>
+<annotation>
+	<folder>labels</folder>
 	<filename>030.png</filename>
-	<path>C:\Users\ericd\Documents\Code\School\cs473-project\dataset\images\resized_images\030.png</path>
+	<path>/dataset/images/raw_images/030.png</path>
 	<source>
 		<database>Unknown</database>
 	</source>
 	<size>
-		<width>1024</width>
-		<height>1024</height>
+		<width>4364</width>
+		<height>2164</height>
 		<depth>1</depth>
 	</size>
 	<segmented>0</segmented>
@@ -17,10 +17,46 @@
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>225</xmin>
-			<ymin>292</ymin>
-			<xmax>415</xmax>
-			<ymax>448</ymax>
+			<xmin>2843</xmin>
+			<ymin>4</ymin>
+			<xmax>3717</xmax>
+			<ymax>1080</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>entity</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>996</xmin>
+			<ymin>168</ymin>
+			<xmax>1717</xmax>
+			<ymax>762</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>entity</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1802</xmin>
+			<ymin>1154</ymin>
+			<xmax>2687</xmax>
+			<ymax>2009</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>entity</name>
+		<pose>Unspecified</pose>
+		<truncated>1</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>3643</xmin>
+			<ymin>1518</ymin>
+			<xmax>4364</xmax>
+			<ymax>1889</ymax>
 		</bndbox>
 	</object>
 	<object>
@@ -30,117 +66,177 @@
 		<difficult>0</difficult>
 		<bndbox>
 			<xmin>1</xmin>
-			<ymin>582</ymin>
-			<xmax>213</xmax>
-			<ymax>712</ymax>
+			<ymin>1404</ymin>
+			<xmax>885</xmax>
+			<ymax>1880</ymax>
 		</bndbox>
 	</object>
 	<object>
-		<name>entity</name>
+		<name>ident_rel</name>
 		<pose>Unspecified</pose>
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>417</xmin>
-			<ymin>526</ymin>
-			<xmax>646</xmax>
-			<ymax>742</ymax>
+			<xmin>1076</xmin>
+			<ymin>1462</ymin>
+			<xmax>1564</xmax>
+			<ymax>1701</ymax>
 		</bndbox>
 	</object>
 	<object>
-		<name>entity</name>
+		<name>rel</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1082</xmin>
+			<ymin>971</ymin>
+			<xmax>1564</xmax>
+			<ymax>1227</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>rel</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>3043</xmin>
+			<ymin>1215</ymin>
+			<xmax>3529</xmax>
+			<ymax>1465</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>rel</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>2923</xmin>
+			<ymin>1574</ymin>
+			<xmax>3402</xmax>
+			<ymax>1824</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>rel_attr</name>
 		<pose>Unspecified</pose>
 		<truncated>1</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>849</xmin>
-			<ymin>605</ymin>
-			<xmax>1024</xmax>
-			<ymax>708</ymax>
+			<xmin>993</xmin>
+			<ymin>2042</ymin>
+			<xmax>1332</xmax>
+			<ymax>2164</ymax>
 		</bndbox>
 	</object>
 	<object>
-		<name>entity</name>
+		<name>rel_attr</name>
+		<pose>Unspecified</pose>
+		<truncated>1</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1364</xmin>
+			<ymin>2042</ymin>
+			<xmax>1685</xmax>
+			<ymax>2164</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>many</name>
 		<pose>Unspecified</pose>
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>661</xmin>
-			<ymin>254</ymin>
-			<xmax>879</xmax>
-			<ymax>514</ymax>
+			<xmin>876</xmin>
+			<ymin>1542</ymin>
+			<xmax>955</xmax>
+			<ymax>1624</ymax>
 		</bndbox>
 	</object>
 	<object>
-		<name>relationship</name>
+		<name>one</name>
 		<pose>Unspecified</pose>
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>245</xmin>
-			<ymin>485</ymin>
-			<xmax>378</xmax>
-			<ymax>544</ymax>
+			<xmin>1729</xmin>
+			<ymin>1539</ymin>
+			<xmax>1802</xmax>
+			<ymax>1615</ymax>
 		</bndbox>
 	</object>
 	<object>
-		<name>relationship</name>
+		<name>one</name>
 		<pose>Unspecified</pose>
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>245</xmin>
-			<ymin>598</ymin>
-			<xmax>377</xmax>
-			<ymax>661</ymax>
+			<xmin>1726</xmin>
+			<ymin>1362</ymin>
+			<xmax>1808</xmax>
+			<ymax>1439</ymax>
 		</bndbox>
 	</object>
 	<object>
-		<name>relationship</name>
+		<name>one</name>
 		<pose>Unspecified</pose>
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>705</xmin>
-			<ymin>541</ymin>
-			<xmax>839</xmax>
-			<ymax>611</ymax>
+			<xmin>1717</xmin>
+			<ymin>665</ymin>
+			<xmax>1814</xmax>
+			<ymax>756</ymax>
 		</bndbox>
 	</object>
 	<object>
-		<name>relationship</name>
+		<name>many</name>
 		<pose>Unspecified</pose>
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>683</xmin>
-			<ymin>630</ymin>
-			<xmax>805</xmax>
-			<ymax>687</ymax>
+			<xmin>2682</xmin>
+			<ymin>1354</ymin>
+			<xmax>2779</xmax>
+			<ymax>1436</ymax>
 		</bndbox>
 	</object>
 	<object>
-		<name>attribute</name>
+		<name>many</name>
 		<pose>Unspecified</pose>
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>315</xmin>
-			<ymin>732</ymin>
-			<xmax>406</xmax>
-			<ymax>765</ymax>
+			<xmin>2673</xmin>
+			<ymin>1551</ymin>
+			<xmax>2782</xmax>
+			<ymax>1627</ymax>
 		</bndbox>
 	</object>
 	<object>
-		<name>attribute</name>
+		<name>many</name>
 		<pose>Unspecified</pose>
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>234</xmin>
-			<ymin>732</ymin>
-			<xmax>311</xmax>
-			<ymax>770</ymax>
+			<xmin>3573</xmin>
+			<ymin>1662</ymin>
+			<xmax>3649</xmax>
+			<ymax>1733</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>one</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>3720</xmin>
+			<ymin>195</ymin>
+			<xmax>3811</xmax>
+			<ymax>286</ymax>
 		</bndbox>
 	</object>
 </annotation>
