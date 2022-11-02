@@ -35,11 +35,11 @@ def expand2square(image):
         return image
     elif width > height:
         result = Image.new(image.mode, (width, width), (255,255,255))
-        result.paste(image, (0, (width - height) // 2))
+        result.paste(image)
         return result
     else:
         result = Image.new(image.mode, (height, height), (255,255,255))
-        result.paste(image, ((height - width) // 2, 0))
+        result.paste(image)
         return result
 
 def resize_all(size):
@@ -50,31 +50,29 @@ def resize_all(size):
     inputs:
         - size (int,int)
     """
-    resized_dir = 'dataset/images/resized_images'
-    label_dir = 'dataset/labels'
-    if not os.path.exists(resized_dir): return
-    in_files = [file for file in os.listdir(resized_dir) if file.endswith(('jpeg', 'png', 'jpg'))]
+    label_dir = 'dataset/raw_labels'
+    raw_dir = 'dataset/images/raw_images'
+    in_files = [file for file in os.listdir(raw_dir) if file.endswith(('jpeg', 'png', 'jpg','PNG','JPG','JPEG'))]
     in_labels = [file for file in os.listdir(label_dir)]
 
     # Resize all of the resized images
     print("Resizing images to be " , size)
-    if len(in_files) > 0:
-        with Image.open(resized_dir + '/' + in_files[0]) as img:
-            old_size = img.size
-    else:
-        old_size = None
     process_raw(size)
     print("Images Resized")
 
     # Resize all of the annotations coordinates to match
-    if old_size is None: return
-    old_width,old_height = old_size
-    width,height = size
-    ratio = width/old_width
     import xml.etree.ElementTree as ET
+    import shutil
+    new_label_dir = 'dataset/labels'
+    shutil.copytree(label_dir, new_label_dir)
     print("Resizing all labels")
-    for file in in_labels:
-        path = label_dir + '/' + file
+    width,height = size
+    for img_path,label_path in zip(in_files,in_labels):
+        assert(img_path[0:3] == label_path[0:3])
+        with Image.open(raw_dir + '/' + img_path) as img:
+            side_length = max(img.size[0],img.size[1])
+            ratio = width/side_length
+        path = new_label_dir + '/' + label_path
         mytree = ET.parse(path)
         root = mytree.getroot()
         root.find('size').find('width').text = str(width)
@@ -83,7 +81,7 @@ def resize_all(size):
         for tag in root.iter('xmax'): tag.text = str(round(int(tag.text) * ratio))
         for tag in root.iter('ymin'): tag.text = str(round(int(tag.text) * ratio))
         for tag in root.iter('ymax'): tag.text = str(round(int(tag.text) * ratio))
-        mytree.write(label_dir + '/' + file)
+        mytree.write(new_label_dir + '/' + label_path)
     print("Labels Resized")
 
 if __name__ == '__main__':
