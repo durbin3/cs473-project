@@ -1,7 +1,8 @@
 import os
 import sys
 from PIL import Image
-
+import xml.etree.ElementTree as ET
+import shutil
 
 ## Running Directions:
 # python image_resizing.py process [size] to convert all of the raw images to
@@ -19,11 +20,11 @@ def process_raw(size):
     """
     directory = 'dataset/images/raw_images'
     out_dir = 'dataset/images/resized_images'
-    if not os.path.exists(out_dir): os.makedirs(out_dir)
-
+    if os.path.exists(out_dir): shutil.rmtree(out_dir)
+    os.makedirs(out_dir)
     for file in os.listdir(directory):
         if file.endswith(('jpeg', 'png', 'jpg')):
-            outfile = os.path.join(out_dir, file)
+            outfile = out_dir + '/' + file
             with Image.open(directory+'/'+file) as im:
                 square = expand2square(im)
                 out = square.resize(size,resample=Image.Resampling.LANCZOS)
@@ -61,9 +62,8 @@ def resize_all(size):
     print("Images Resized")
 
     # Resize all of the annotations coordinates to match
-    import xml.etree.ElementTree as ET
-    import shutil
     new_label_dir = 'dataset/labels'
+    if os.path.exists(new_label_dir): shutil.rmtree(new_label_dir)
     shutil.copytree(label_dir, new_label_dir)
     print("Resizing all labels")
     width,height = size

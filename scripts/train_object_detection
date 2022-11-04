@@ -1,1 +1,1 @@
-python src/od_trainer.py --model_dir=models/object_detection --pipeline_config_path=models/object_detection/pipeline.config
+python src/od_trainer.py --model_dir=models/$1 --pipeline_config_path=models/$1/pipeline.config

@@ -5,11 +5,13 @@ fi
 
 if [ -d "dataset/images/labeled_images" ]
 then
+    echo "Removing Existing Combined Folder"
     rm -rf dataset/images/labeled_images
 fi
 
 if [ -d "dataset/train" ]
 then
+    echo "Removing Existing train/test datasets"
     rm -rf dataset/train
     rm -rf dataset/test
 fi

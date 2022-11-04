@@ -41,8 +41,16 @@ If an import error for the object detection api comes up regarding builder.py, y
 
 If an error pops up relating to tensorflow not being able to find {CUDA_DIR}, you may need to go to the directory where CUDA is, and copy-paste the `nvvm` folder into this project's source directory.
 
+The basic running steps are:
+- `python src/image_resizing.py resize [size]` to resize the images and labels for the models input size
+- `source scripts/gen_dataset.sh` to generate the test/train datasets
+- `source scripts/train_object_detection [model_name]` to train the model
+- `source scripts/export_object_detection [model_name]` to export the most recent checkpoint to be a model
+- `python src/od_inference.py [model_name] [path] [image_size]` to run object detection on an image
+
 ## Model Installation
 Here's a list of all the models used
-- [Object detection](http://download.tensorflow.org/models/object_detection/tf2/20200711/ssd_resnet152_v1_fpn_1024x1024_coco17_tpu-8.tar.gz)
+- [Object detection 1024](http://download.tensorflow.org/models/object_detection/tf2/20200711/ssd_resnet152_v1_fpn_1024x1024_coco17_tpu-8.tar.gz)
+- [Object detection 512](http://download.tensorflow.org/models/object_detection/tf2/20200711/centernet_resnet50_v2_512x512_coco17_tpu-8.tar.gz)
 
 After downloading, extract the models and place them in the `models/pretrained_models` folder, which you may need to create.
