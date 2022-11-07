@@ -26,7 +26,7 @@ def object_detection(image_path,size,model_path):
     image_tensor,scale_factor,small_np = preprocess_image(image,(size,size))
     model = load_model(model_path)
     category_index = label_map_util.create_category_index_from_labelmap(LABEL_MAP, use_display_name=True)
-
+    
     print(f'Detecting objects in {image_path[-7:]}', end='')
     detections = detect_objects(image_tensor,model,size)
     num_detections = len(detections['detection_scores'])
@@ -42,6 +42,13 @@ def object_detection(image_path,size,model_path):
     visualize_detections(detections,image_np,'./out/' + image_path[-7:],category_index)
     print('\tDone')
     print("\nObjects Found: ", objects)
+
+    # Save objects in image into file.
+    out_filename = './out/' + image_path[-7:-4] + '.txt' # ./out/001.txt
+    print("\nWriting objects to: ", out_filename)
+    with open(out_filename, 'w') as out_file:
+      out_file.write(str(objects))
+
     return objects
 
 def load_model(path):
