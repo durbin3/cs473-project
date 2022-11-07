@@ -54,3 +54,13 @@ Here's a list of all the models used
 - [Object detection 512](http://download.tensorflow.org/models/object_detection/tf2/20200711/centernet_resnet50_v2_512x512_coco17_tpu-8.tar.gz)
 
 After downloading, extract the models and place them in the `models/pretrained_models` folder, which you may need to create.
+
+## OCR
+
+Run OCR scripts based on Object Detection output saved in `dataset/out/od`
+
+Running steps are:
+- `python src/ocr_image_process.py -x dataset/labels/ -o dataset/ocr_images/ -i dataset/images/resized_images/` to crop resized_images based on coordinates and save it in `dataset/ocr_images`
+- `python src/ocr_easyOCR.py -o dataset/out/ocr/ -i dataset/ocr_images/` to run OCR using ocr_images and save the results in `out/ocr/`
+
+
