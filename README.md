@@ -52,6 +52,7 @@ The basic running steps are:
 Here's a list of all the models used
 - [Object detection 1024](http://download.tensorflow.org/models/object_detection/tf2/20200711/ssd_resnet152_v1_fpn_1024x1024_coco17_tpu-8.tar.gz)
 - [Object detection 512](http://download.tensorflow.org/models/object_detection/tf2/20200711/centernet_resnet50_v2_512x512_coco17_tpu-8.tar.gz)
+- [centernet512_7000_no_aug](https://drive.google.com/file/d/16LcVmtmh_rJ3eGczJFKfRi-SAv-tpYV0/view?usp=drivesdk) (Link to Google Doc with exported model)
 
 After downloading, extract the models and place them in the `models/pretrained_models` folder, which you may need to create.
 
