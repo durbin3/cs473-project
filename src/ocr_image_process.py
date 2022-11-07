@@ -94,6 +94,8 @@ def label_to_pic(img_path, output_path, xml_df):
 
             img2.save(tmp_save_path)
 
+            if row["class"] == "many" or row["class"] == "one":
+              continue
             write_str = str(file_count) + " " + row["class"] + "\n"
             f.write(write_str)
 
