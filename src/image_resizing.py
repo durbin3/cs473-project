@@ -18,8 +18,9 @@ def process_raw(size):
     inputs:
         - size (int,int)
     """
-    directory = 'dataset/images/raw_images'
-    out_dir = 'dataset/images/resized_images'
+    directory = os.path.join('dataset', 'images', 'raw_images')
+    out_dir = os.path.join('dataset', 'images', 'resized_images')
+
     if os.path.exists(out_dir): shutil.rmtree(out_dir)
     os.makedirs(out_dir)
     for file in os.listdir(directory):
@@ -51,8 +52,9 @@ def resize_all(size):
     inputs:
         - size (int,int)
     """
-    label_dir = 'dataset/raw_labels'
-    raw_dir = 'dataset/images/raw_images'
+    label_dir = os.path.join('dataset', 'raw_labels')
+    raw_dir = os.path.join('dataset', 'images', 'raw_images')
+    
     in_files = [file for file in os.listdir(raw_dir) if file.endswith(('jpeg', 'png', 'jpg','PNG','JPG','JPEG'))]
     in_labels = [file for file in os.listdir(label_dir)]
 

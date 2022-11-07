@@ -32,9 +32,15 @@ from object_detection import model_lib_v2
 
 import tensorflow.python.util.deprecation as deprecation
 deprecation._PRINT_DEPRECATION_WARNINGS = False
+
 import os
 os.environ["XLA_FLAGS"]="--xla_gpu_cuda_data_dir=C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.7"
 os.environ['CUDA_DIR']="C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.7"
+
+# os.environ["XLA_FLAGS"]="--xla_gpu_cuda_data_dir=C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v11.2"
+# os.environ['CUDA_DIR']="C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v11.2"
+# os.environ['TF_GPU_ALLOCATOR']='cuda_malloc_async'
+
 physical_devices = tf.config.experimental.list_physical_devices('GPU')
 if len(physical_devices) > 0:
     tf.config.experimental.set_memory_growth(physical_devices[0], True)

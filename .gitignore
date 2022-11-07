@@ -136,9 +136,17 @@ dataset/train.record
 dataset/test.record
 .idea
 .DS_STORE
+
 models/object_detection*/train
+models/object_detection*/eval
 models/object_detection*/checkpoint
 models/object_detection*/ckpt*
+
+models/centernet*/train
+models/centernet*/eval
+models/centernet*/checkpoint
+models/centernet*/ckpt*
+
 models/pretrained_models
 models/exported_models
 nvvm
