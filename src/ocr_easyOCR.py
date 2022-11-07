@@ -11,6 +11,8 @@ optional arguments:
 
 import os
 import argparse
+import shutil
+
 import cv2
 import easyocr
 
@@ -56,8 +58,9 @@ def ocr(reader, img_path):
 
 def image_to_string(save_path, image_path):
     reader = easyocr.Reader(["en"])
-    if not os.path.exists(save_path):
-      os.mkdir(save_path)
+    if os.path.exists(save_path):
+        shutil.rmtree(save_path)
+    os.mkdir(save_path)
 
     for subdir in os.listdir(image_path):
         with open(image_path+"/"+subdir+"/"+"types.txt","r") as f:
