@@ -16,7 +16,7 @@ warnings.filterwarnings('ignore')   # Suppress Matplotlib warnings
 for gpu in tf.config.experimental.list_physical_devices('GPU') : tf.config.experimental.set_memory_growth(gpu, True)
 
 LABEL_MAP = 'dataset/label_map.pbtxt'
-LABELS = ['entity','weak_entity','relationship','identifying_relationship','attribute','many','one']
+LABELS = ['entity','weak_entity','rel','ident_rel','rel_attr','many','one']
 THRESHOLD = .45
 def object_detection(image_path,size,model_path):
     if not os.path.exists('./out'): os.makedirs('./out')
@@ -32,7 +32,7 @@ def object_detection(image_path,size,model_path):
     for i in range(num_detections):
         if detections['detection_scores'][i] > THRESHOLD:
             obj_class_num = detections['detection_classes'][i]
-            obj_class = LABELS[obj_class_num]
+            obj_class = LABELS[obj_class_num-1]
             loc = detections['detection_boxes'][i].tolist()
             objects.append([obj_class,loc])
     print("\nObjects Found: ", objects)
@@ -88,7 +88,7 @@ def detect_objects(image_tensor,model,size):
     detections['detection_boxes'] = detections['detection_boxes'] * size
     return detections
 
-def visualize_detections(detections,image,out_path,category_index):
+def visualize_detections(detections,image,out_path):
     from object_detection.utils import label_map_util
     from object_detection.utils import visualization_utils as viz_utils
     category_index = label_map_util.create_category_index_from_labelmap(LABEL_MAP, use_display_name=True)

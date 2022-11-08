@@ -1,3 +1,13 @@
+## For TAs
+To run object detection, after setup, run `python src/od_inference.py [model_path] [image_path]`
+Note that `model_path` must be the path to the saved model directory, e.g `models/exported_models/centernet512_7000_no_aug/saved_model/`.
+A valid command for running should be: `python src/od_inference.py models/exported_models/centernet512_7000_no_aug/saved_model/ dataset/images/raw_images/120.png`
+The output will be in `./out` and will contain an image of the object detection (if the object_detection package is installed) and a text file that contains the output list.
+
+To run OCR run `source scripts/run_ocr`
+This will run OCR on all of the images and the detected objects found in the `./out` folder.
+
+## Setup
 python version: 3.9.13
 
 to setup:
@@ -41,17 +51,18 @@ If an import error for the object detection api comes up regarding builder.py, y
 
 If an error pops up relating to tensorflow not being able to find {CUDA_DIR}, you may need to go to the directory where CUDA is, and copy-paste the `nvvm` folder into this project's source directory.
 
-The basic running steps are:
+The basic running steps for training are:
 - `python src/image_resizing.py resize [size]` to resize the images and labels for the models input size
 - `source scripts/gen_dataset.sh` to generate the test/train datasets
 - `source scripts/train_object_detection [model_name]` to train the model
 - `source scripts/export_object_detection [model_name]` to export the most recent checkpoint to be a model
 - `python src/od_inference.py [model_name] [path] [image_size]` to run object detection on an image
 
+To run object detection for inference:
+- `python src/od_inference.py [model_path] [image_path]`
+
 ## Model Installation
-Here's a list of all the models used
-- [Object detection 1024](http://download.tensorflow.org/models/object_detection/tf2/20200711/ssd_resnet152_v1_fpn_1024x1024_coco17_tpu-8.tar.gz)
-- [Object detection 512](http://download.tensorflow.org/models/object_detection/tf2/20200711/centernet_resnet50_v2_512x512_coco17_tpu-8.tar.gz)
+Here's a list of the models used
 - [centernet512_7000_no_aug](https://drive.google.com/file/d/16LcVmtmh_rJ3eGczJFKfRi-SAv-tpYV0/view?usp=drivesdk) (Link to Google Doc with exported model)
 
 After downloading, extract the models and place them in the `models/pretrained_models` folder, which you may need to create.

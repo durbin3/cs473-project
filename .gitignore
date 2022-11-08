@@ -130,6 +130,7 @@ dmypy.json
 
 dataset/labels/*
 dataset/images/
+dataset/ocr_images
 dataset/train
 dataset/test
 dataset/train.record
