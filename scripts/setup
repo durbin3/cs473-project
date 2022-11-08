@@ -2,4 +2,5 @@ source ./activate
 pip install cython
 pip install numpy
 pip install git+https://github.com/philferriere/cocoapi.git#subdirectory=PythonAPI
+pip install easyocr
 pip install -r ./scripts/requirements

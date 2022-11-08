@@ -6,8 +6,6 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import warnings
 import time
-from object_detection.utils import label_map_util
-from object_detection.utils import visualization_utils as viz_utils
 
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'    # Suppress TensorFlow logging (1)
@@ -18,6 +16,7 @@ warnings.filterwarnings('ignore')   # Suppress Matplotlib warnings
 for gpu in tf.config.experimental.list_physical_devices('GPU') : tf.config.experimental.set_memory_growth(gpu, True)
 
 LABEL_MAP = 'dataset/label_map.pbtxt'
+LABELS = ['entity','weak_entity','relationship','identifying_relationship','attribute','many','one']
 THRESHOLD = .45
 def object_detection(image_path,size,model_path):
     if not os.path.exists('./out'): os.makedirs('./out')
@@ -25,7 +24,6 @@ def object_detection(image_path,size,model_path):
     image_np = np.array(image)[:,:,:3]
     image_tensor,scale_factor,small_np = preprocess_image(image,(size,size))
     model = load_model(model_path)
-    category_index = label_map_util.create_category_index_from_labelmap(LABEL_MAP, use_display_name=True)
     
     print(f'Detecting objects in {image_path[-7:]}', end='')
     detections = detect_objects(image_tensor,model,size)
@@ -34,13 +32,9 @@ def object_detection(image_path,size,model_path):
     for i in range(num_detections):
         if detections['detection_scores'][i] > THRESHOLD:
             obj_class_num = detections['detection_classes'][i]
-            obj_class = category_index[obj_class_num]['name']
+            obj_class = LABELS[obj_class_num]
             loc = detections['detection_boxes'][i].tolist()
             objects.append([obj_class,loc])
-    visualize_detections(detections,small_np,'./out/raw_' + image_path[-7:],category_index)
-    detections['detection_boxes'] = detections['detection_boxes'] * scale_factor
-    visualize_detections(detections,image_np,'./out/' + image_path[-7:],category_index)
-    print('\tDone')
     print("\nObjects Found: ", objects)
 
     # Save objects in image into file.
@@ -49,6 +43,10 @@ def object_detection(image_path,size,model_path):
     with open(out_filename, 'w') as out_file:
       out_file.write(str(objects))
 
+    # visualize_detections(detections,small_np,'./out/raw_' + image_path[-7:])
+    detections['detection_boxes'] = detections['detection_boxes'] * scale_factor
+    visualize_detections(detections,image_np,'./out/' + image_path[-7:])
+    print('\tDone')
     return objects
 
 def load_model(path):
@@ -91,6 +89,9 @@ def detect_objects(image_tensor,model,size):
     return detections
 
 def visualize_detections(detections,image,out_path,category_index):
+    from object_detection.utils import label_map_util
+    from object_detection.utils import visualization_utils as viz_utils
+    category_index = label_map_util.create_category_index_from_labelmap(LABEL_MAP, use_display_name=True)
     image_np_with_detections = image.copy()
     viz_utils.visualize_boxes_and_labels_on_image_array(
             image_np_with_detections,
@@ -126,9 +127,8 @@ if __name__ == "__main__":
         print("Need to include a model name and a file path to an image")
         exit()
 
-    model_name = sys.argv[1]
+    model_path = sys.argv[1]
     image_path = sys.argv[2]
-    size = int(sys.argv[3]) if len(sys.argv) == 4 else 1024
-    model_path = f'models/exported_models/{model_name}/saved_model'
+    size = int(sys.argv[3]) if len(sys.argv) == 4 else 512
 
     object_detection(image_path,size,model_path)
