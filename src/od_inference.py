@@ -27,6 +27,7 @@ def object_detection(image_path,size,model_path):
     
     print(f'Detecting objects in {image_path[-7:]}', end='')
     detections = detect_objects(image_tensor,model,size)
+    detections['detection_boxes'] = detections['detection_boxes'] * scale_factor # upscale the detections to fit the original image
     num_detections = len(detections['detection_scores'])
     objects = []
     for i in range(num_detections):
@@ -43,8 +44,6 @@ def object_detection(image_path,size,model_path):
     with open(out_filename, 'w') as out_file:
       out_file.write(str(objects))
 
-    # visualize_detections(detections,small_np,'./out/raw_' + image_path[-7:])
-    detections['detection_boxes'] = detections['detection_boxes'] * scale_factor
     visualize_detections(detections,image_np,'./out/' + image_path[-7:])
     print('\tDone')
     return objects
