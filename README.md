@@ -58,10 +58,10 @@ After downloading, extract the models and place them in the `models/pretrained_m
 
 ## OCR
 
-Run OCR scripts based on Object Detection output saved in `dataset/out/od`
+Run OCR scripts based on Object Detection output saved in `out/*.txt`
 
 Running steps are:
-- `python src/ocr_image_process.py -x dataset/labels/ -o dataset/ocr_images/ -i dataset/images/resized_images/` to crop resized_images based on coordinates and save it in `dataset/ocr_images`
-- `python src/ocr_easyOCR.py -o dataset/out/ocr/ -i dataset/ocr_images/` to run OCR using ocr_images and save the results in `out/ocr/`
+- `python src/ocr_crop_images.py -r ./out -o ./dataset/ocr_images -i ./dataset/images/raw_images` to crop resized_images based on coordinates and save it in `dataset/ocr_images`
+- `python src/ocr_easyOCR.py -o ./out/ocr -i ./dataset/ocr_images` to run OCR using ocr_images and save the results in `out/ocr/`
 
 
