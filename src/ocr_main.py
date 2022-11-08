@@ -46,7 +46,10 @@ def extract_images(img_path, out_path, od_path):
     for txt_file in glob.glob(od_path+"/*.txt"):
         img_file = os.path.basename(txt_file)
         img_file_num = img_file[:-4]
+        print("OCR For Image ", img_file_num)
         tmp_img_path = img_path+"/"+img_file_num+".png"
+        if not os.path.exists(tmp_img_path): tmp_img_path = img_path+"/"+img_file_num+".jpg"
+        if not os.path.exists(tmp_img_path): tmp_img_path = img_path+"/"+img_file_num+".jpeg"
         save_path = out_path + "/" + img_file_num + ".txt"
 
 
@@ -69,10 +72,10 @@ def extract_images(img_path, out_path, od_path):
             for idx2 in result:
               ans_arr.append(idx2[1])
 
-            write_str = "{}_{}: {} {}\n".format(img_file_num, idx, obj_type, list(map(str, ans_arr)))
+            write_str = "{}_{}: {} {}".format(img_file_num, idx, obj_type, list(map(str, ans_arr)))
             print(write_str)
-            text_f.write(write_str)
-
+            text_f.write(write_str+'\n')
+        print()
         text_f.close()
 
 def main():

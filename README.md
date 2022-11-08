@@ -4,7 +4,7 @@ Note that `model_path` must be the path to the saved model directory, e.g `model
 A valid command for running should be: `python src/od_inference.py models/exported_models/centernet512_7000_no_aug/saved_model/ dataset/images/raw_images/120.png`
 The output will be in `./out` and will contain an image of the object detection (if the object_detection package is installed) and a text file that contains the output list.
 
-To run OCR run `source scripts/run_ocr`
+To run OCR run `python src/ocr_main.py -r ./out -o ./out/ocr -i [images folder path]`
 This will run OCR on all of the images and the detected objects found in the `./out` folder.
 
 ## Setup
