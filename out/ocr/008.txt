@@ -1,0 +1,8 @@
+008_0: rel ['allows']
+008_1: rel_attr ['max number']
+008_2: rel ['has']
+008_3: rel ['sells by']
+008_4: entity ['airline', 'PK name', 'rating']
+008_5: entity ['trip', 'PK uid', 'type', 'class', 'price', 'origin', 'destination']
+008_6: entity ['bag', 'PK type', 'max weight', 'price']
+008_7: entity ['flight', 'PK flight uid', 'origin', 'destination', 'departure-time', 'arrival-time', 'duration']

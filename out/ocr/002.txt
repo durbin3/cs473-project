@@ -1,0 +1,7 @@
+002_0: rel ['Operated By']
+002_1: rel ['Sold']
+002_2: rel_attr ['Number']
+002_3: rel_attr ['Price']
+002_4: rel ['Allowed']
+002_5: rel []
+002_6: rel []

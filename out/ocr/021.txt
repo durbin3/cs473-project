@@ -1,0 +1,8 @@
+021_0: rel ['has']
+021_1: rel ['Has']
+021_2: rel ['operates']
+021_3: rel ['Sells']
+021_4: rel_attr ['bag_price']
+021_5: entity ['bags', 'PK Bag_Type', 'Maximum_weight']
+021_6: entity ['Airline', 'PK', 'Name', 'rating']
+021_7: entity ['Flight', 'PK Flight number', 'Departure_airport', 'Arrival_airport', 'Departure_ time Arrival time']

@@ -1,0 +1,7 @@
+017_0: rel ['allows']
+017_1: rel_attr ['maximum number']
+017_2: entity ['Airline', 'PK name', 'rating']
+017_3: entity ['PK Bag_Type', 'Maximum Weight', 'Bag']
+017_4: entity ['Trips', 'PK number', 'class', 'price', 'type']
+017_5: rel_attr ['price']
+017_6: entity ['Flight', 'PK', 'Origin', 'PK', 'Destination', 'PK', 'trips number', 'PK', 'airline_name', 'departure date-time', 'arrival date-time', 'duration']
