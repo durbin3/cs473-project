@@ -74,4 +74,7 @@ Run OCR scripts based on Object Detection output saved in `out/*.txt`
 Running step:
 - `python src/ocr_main.py -r ./out -o ./out/ocr -i ./dataset/images/raw_images` to extract texts and save it in `out/ocr`
 
-
+## Base Clustering
+Run Baseline Clustering based on OCR results saved in `out/ocr/`
+Running step:
+- `python ./stage2/baseClustering.py -r ./out/ocr -k [number of clusters] -o [output result path]
