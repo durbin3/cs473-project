@@ -77,4 +77,4 @@ Running step:
 ## Base Clustering
 Run Baseline Clustering based on OCR results saved in `out/ocr/`
 Running step:
-- `python ./stage2/baseClustering.py -r ./out/ocr -k [number of clusters] -o [output result path]
+- `python ./stage2/baseClustering.py -r ./out/ocr -k [number of clusters] -o [output result path]`
