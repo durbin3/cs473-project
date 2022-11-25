@@ -1,8 +1,11 @@
 import argparse
 import ast
 import glob
+import matplotlib.pyplot as plt
 import pandas as pd
 import os
+from sklearn.cluster import KMeans
+from sklearn.metrics.cluster import rand_score
 
 from baseClustering import base_clustering, doc_vectorize, concat_texts
 
@@ -23,22 +26,14 @@ parser.add_argument("-k",
 #                     "--output_path",
 #                     help="Path to save output.", type=str)
 
-# Added "ERD_LABEL_" to avoid key collision with words in ocr results
+# Added "ERD_LABEL_" to avoid key collision with words in ocr results.
 ERD_LABELS = ["ERD_LABEL_entity", "ERD_LABEL_weak_entity",
               "ERD_LABEL_rel", "ERD_LABEL_ident_rel",
               "ERD_LABEL_rel_attr", "ERD_LABEL_many", "ERD_LABEL_one"]
 
-#######################################################################################
-# Reads in the object detection output and returns the counters of each entity,       #
-# weak_entity, relationship, etc...                                                   #
-#                                                                                     #
-# Input:                                                                              #
-#       ob_path = path to ocr result text files                                       #
-#                                                                                     #
-# Output:                                                                             #
-#       type pandas.Dataframe: columns = ERD_LABELS                                   #
-#######################################################################################
-
+# Reads in the object detection output and returns the counters of each entity,
+# weak_entity, relationship, etc...
+# Returns a pandas.DataFrame of the ERD_LABEL_label counters.
 def parse_ob_output(ob_path):
   df_erd_counts = pd.DataFrame([], columns=ERD_LABELS)
 
@@ -55,19 +50,41 @@ def parse_ob_output(ob_path):
 
   return df_erd_counts
 
+# Plots line graph of different k values against their within-cluster sum square error.
+def graph_distortion(features, min_k=1, max_k=5):
+  k_nums = [i for i in range(min_k, max_k)]
+  within_cluster_SSEs = []  # Within-cluster sum squared errors
+
+  for k in k_nums:
+    k_means = KMeans(n_clusters=k, init="k-means++").fit(features)
+
+    clustering = k_means.predict(features)
+    centroids = k_means.cluster_centers_
+
+    sse = 0
+    for i in range(features.shape[0]):
+      center = centroids[clustering[i]]
+      sse += sum([(features.iloc[i][j] - center[j]) ** 2 for j in range(features.shape[1])])
+
+    within_cluster_SSEs.append(sse)
+
+  plt.plot(k_nums, within_cluster_SSEs)
+  plt.xlabel("k")
+  plt.ylabel("Within-cluster-SSE")
+  plt.show()
+  plt.savefig("elbow_graph.png")
+  
+
 def main():
   args = parser.parse_args()
-
 
   text_dict = concat_texts(args.ocr_results)
   df_ocr_features = doc_vectorize(text_dict)
   df_erd_features = parse_ob_output(args.ob_results)
   
   df_features = df_ocr_features.join(df_erd_features, on=df_ocr_features.index, how='left')
-  # df_features = df_ocr_features
 
-  cluster_dict = base_clustering(df_features, args.num_clusters)
-  print(cluster_dict)
+  graph_distortion(df_features, 1, 5)
 
 if __name__ == "__main__":
   main()
