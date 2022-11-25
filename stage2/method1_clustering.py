@@ -72,7 +72,6 @@ def graph_distortion(features, min_k=1, max_k=5):
   plt.xlabel("k")
   plt.ylabel("Within-cluster-SSE")
   plt.show()
-  plt.savefig("elbow_graph.png")
   
 
 def main():
@@ -84,7 +83,7 @@ def main():
   
   df_features = df_ocr_features.join(df_erd_features, on=df_ocr_features.index, how='left')
 
-  graph_distortion(df_features, 1, 5)
+  graph_distortion(df_ocr_features, 1, 5)
 
 if __name__ == "__main__":
   main()
