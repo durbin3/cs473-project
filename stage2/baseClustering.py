@@ -35,7 +35,7 @@ parser.add_argument("-k",
 parser.add_argument("-o",
                     "--output_path",
                     help="Path to save output.", type=str)
-args = parser.parse_args()
+
 
 #######################################################################################
 # Input:                                                                              #
@@ -118,6 +118,8 @@ def base_clustering(dataframe, k):
     return ans_dict
 
 def main():
+    args = parser.parse_args()
+
     text_dict = concat_texts(args.ocr_results)
     dataframe = doc_vectorize(text_dict)
     cluster_dict = base_clustering(dataframe, args.num_clusters)
