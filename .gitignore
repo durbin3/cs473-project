@@ -151,3 +151,6 @@ models/centernet*/ckpt*
 models/pretrained_models
 models/exported_models
 nvvm
+
+base_line_clusters.txt
+advanced_clusters.txt

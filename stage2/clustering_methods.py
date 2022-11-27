@@ -1,41 +1,21 @@
-
-"""
-usage: baseClustering.py [-h] [-r OCR_RESULTS_PATH] [-o OUTPUT_PATH]
-optional arguments:
-  -h, --help            show this help message and exit
-  -r OCR_RESULTS_PATH, --ocr_results OCR_RESULTS_PATH
-                        Path to the folder where ocr results are stored.
-  -o OUTPUT_PATH, --output_path OUTPUT_PATH
-                        Path to save output
-  -k NUM_CLUSTERS --num_clusters NUM_CLUSTERS
-                        number of clusters
-"""
 import ast
 import math
 import os
 import glob
-import argparse
+import matplotlib.pyplot as plt
 import pandas as pd
 import re
 from nltk.stem import PorterStemmer
-from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.cluster import KMeans
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics.cluster import silhouette_score
+from sklearn.preprocessing import normalize
 
 
-# Initiate argument parser
-parser = argparse.ArgumentParser(
-    description="Image processing for OCR")
-parser.add_argument("-r",
-                    "--ocr_results",
-                    help="Path to the folder where the ocr results are stored.",
-                    type=str)
-parser.add_argument("-k",
-                    "--num_clusters",
-                    help="number of clusters", type=int)
-parser.add_argument("-o",
-                    "--output_path",
-                    help="Path to save output.", type=str)
-
+# Added "ERD_LABEL_" to avoid key collision with words in ocr results.
+ERD_LABELS = ["ERD_LABEL_entity", "ERD_LABEL_weak_entity",
+              "ERD_LABEL_rel", "ERD_LABEL_ident_rel",
+              "ERD_LABEL_rel_attr", "ERD_LABEL_many", "ERD_LABEL_one"]
 
 #######################################################################################
 # Input:                                                                              #
@@ -45,7 +25,7 @@ parser.add_argument("-o",
 #       type Dict: key = erd_image_num , value = concatenated string                  #
 #######################################################################################
 
-def concat_texts(ocr_path):
+def ocr_concat_texts(ocr_path):
     ps = PorterStemmer()
     erd_dict = {}
     for txt_file in glob.glob(ocr_path+"/*.txt"):
@@ -65,7 +45,7 @@ def concat_texts(ocr_path):
 # Output:                                                                             #
 #       ans_df = type DataFrame: DataFrame of processed texts                         #
 #######################################################################################
-def doc_vectorize(erd_dict):
+def ocr_doc_vectorize(erd_dict):
     ps = PorterStemmer()
     erd_list = list(erd_dict.values())
     tmp_erd_string = [" ".join(doc) for doc in erd_list]
@@ -99,6 +79,45 @@ def doc_vectorize(erd_dict):
 
     return ans_df
 
+# Reads in the object detection output and returns the counters of each entity,
+# weak_entity, relationship, etc...
+# Returns a pandas.DataFrame of the ERD_LABEL_label counters.
+def parse_ob_output(ob_path):
+  df_erd_counts = pd.DataFrame([], columns=ERD_LABELS)
+
+  for txt_file in glob.glob(ob_path + "/*.txt"):
+    file_num = os.path.basename(txt_file)[:-4]
+    label_counts = {label: 0 for label in ERD_LABELS}
+
+    with open(txt_file,"r") as f:
+      components = ast.literal_eval("".join(f.readlines()))
+      for component in components:
+        label_counts["ERD_LABEL_" + component[0]] += 1
+
+    df_erd_counts.loc[file_num] = label_counts
+
+  return df_erd_counts
+
+# Returns the global optimal k based on the silhouette scores and saves
+# the graph of k against silhouette scores as "graph_silhouette_scores.png".
+def get_optimal_k_silhouette(features):
+  min_k = 2
+  max_k = features.shape[0]
+
+  k_nums = [i for i in range(min_k, max_k)]
+
+  best_k = -1
+  best_score = -1
+
+  for k in k_nums:
+    k_means = KMeans(n_clusters=k, init="k-means++").fit(features)
+    sil_score = silhouette_score(features, k_means.labels_, metric='euclidean')
+
+    if (sil_score > best_score):
+      best_k = k
+      best_score = sil_score
+
+  return best_k
 
 #######################################################################################
 # Input:                                                                              #
@@ -117,13 +136,27 @@ def base_clustering(dataframe, k):
         ans_dict[dataframe.index[k_idx]] = km.labels_[k_idx]
     return ans_dict
 
-def main():
-    args = parser.parse_args()
+# Module 4 baseline clustering
+def method0_clustering(ocr_results_path, k=0):
+  text_dict = ocr_concat_texts(ocr_results_path)
+  df_ocr_features = ocr_doc_vectorize(text_dict)
 
-    text_dict = concat_texts(args.ocr_results)
-    dataframe = doc_vectorize(text_dict)
-    cluster_dict = base_clustering(dataframe, args.num_clusters)
-    print(cluster_dict)
+  if k == 0:
+    k = get_optimal_k_silhouette(df_ocr_features)
 
-if __name__ == '__main__':
-    main()
+  return base_clustering(df_ocr_features, k)
+
+# Method 1: Use the features: number of entities, number of relationships, number of weak
+# entities, ... etc. Also, use entity names, attribute names, ... etc.
+def method1_clustering(ocr_results_path, ob_results_path, k=0):
+  text_dict = ocr_concat_texts(ocr_results_path)
+  df_ocr_features = ocr_doc_vectorize(text_dict)
+  df_erd_features = parse_ob_output(ob_results_path)
+
+  df_features = df_ocr_features.join(df_erd_features, on=df_ocr_features.index, how='left')
+  df_features = pd.DataFrame(normalize(df_features), index= df_features.index,columns=df_features.columns)
+
+  if k == 0:
+    k = get_optimal_k_silhouette(df_features)
+
+  return base_clustering(df_features, k)
