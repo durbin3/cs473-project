@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import os
 from sklearn.cluster import KMeans
-from sklearn.metrics.cluster import rand_score
+from sklearn.preprocessing import normalize
+from sklearn.metrics.cluster import silhouette_score
 
 from baseClustering import base_clustering, doc_vectorize, concat_texts
 
@@ -51,7 +52,7 @@ def parse_ob_output(ob_path):
   return df_erd_counts
 
 # Plots line graph of different k values against their within-cluster sum square error.
-def graph_distortion(features, min_k=1, max_k=5):
+def graph_distortion_WC_SSE(features, min_k=1, max_k=5):
   k_nums = [i for i in range(min_k, max_k)]
   within_cluster_SSEs = []  # Within-cluster sum squared errors
 
@@ -72,6 +73,22 @@ def graph_distortion(features, min_k=1, max_k=5):
   plt.xlabel("k")
   plt.ylabel("Within-cluster-SSE")
   plt.show()
+
+def graph_distortion_silhouette_scores(features):
+  min_k = 2
+  max_k = features.shape[0]
+
+  k_nums = [i for i in range(min_k, max_k)]
+  sil_scores = []
+
+  for k in k_nums:
+    k_means = KMeans(n_clusters=k, init="k-means++").fit(features)
+    sil_scores.append(silhouette_score(features, k_means.labels_, metric='euclidean'))
+
+  plt.plot(k_nums, sil_scores)
+  plt.xlabel("k")
+  plt.ylabel("silhouette_score")
+  plt.show()
   
 
 def main():
@@ -79,11 +96,15 @@ def main():
 
   text_dict = concat_texts(args.ocr_results)
   df_ocr_features = doc_vectorize(text_dict)
+
   df_erd_features = parse_ob_output(args.ob_results)
   
   df_features = df_ocr_features.join(df_erd_features, on=df_ocr_features.index, how='left')
+  df_features = pd.DataFrame(normalize(df_features), index= df_features.index,columns=df_features.columns)
 
-  graph_distortion(df_ocr_features, 1, 5)
+  # print(df_features)
+  # graph_distortion_WC_SSE(df_features, 1, 5)
+  graph_distortion_silhouette_scores(df_features)
 
 if __name__ == "__main__":
   main()
