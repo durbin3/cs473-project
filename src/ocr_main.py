@@ -35,8 +35,6 @@ parser.add_argument("-i",
                     help="Path to the folder where the raw image files are stored. ",
                     type=str, default=None)
 
-args = parser.parse_args()
-
 def extract_images(img_path, out_path, od_path):
     reader = easyocr.Reader(["en"])
     if os.path.exists(out_path):
@@ -79,6 +77,7 @@ def extract_images(img_path, out_path, od_path):
         text_f.close()
 
 def main():
+    args = parser.parse_args()
     extract_images(args.image_dir, args.output_path, args.od_results)
     print("Successfully processed and extracted Images!!")
 
