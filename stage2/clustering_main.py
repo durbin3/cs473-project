@@ -33,7 +33,7 @@ parser.add_argument("-o",
                     "--output_path",
                     help="Path to save output.", type=str)
 
-SAVED_MODEL_PATH = "./models/exported_models/centernet512_7000_no_aug/saved_model/"
+SAVED_MODEL_PATH = os.path.join(".", "models", "exported_models", "centernet512_7000_no_aug", "saved_model")
 
 
 def read_parameters(file_path):
