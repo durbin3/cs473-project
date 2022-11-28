@@ -16,6 +16,7 @@ import argparse
 import os
 import sys
 from clustering_methods import method0_clustering, method1_clustering
+# from "cs473-project.src.od_inference" import object_detection
 
 path_to_project = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.append(path_to_project)
@@ -25,16 +26,30 @@ from src.ocr_main import extract_images
 
 parser = argparse.ArgumentParser(
     description="Image processing for OCR")
+parser.add_argument("-o",
+                    "--output_path",
+                    help="Path to save output.", type=str)
 parser.add_argument("-p",
                     "--parameters_path",
                     help="Path to the parameters.txt file.",
                     type=str)
-parser.add_argument("-o",
-                    "--output_path",
-                    help="Path to save output.", type=str)
+
+parser.add_argument("-r",
+                    "--ocr_results",
+                    help="[OPTIONAL] Path to the folder where the ocr results are stored.",
+                    type=str)
+parser.add_argument("-b",
+                    "--ob_results",
+                    help="[OPTIONAL] Path to the folder where object detection results are stored.",
+                    type=str)
+parser.add_argument("-k",
+                    "--num_clusters",
+                    help="[OPTIONAL] Number of clusters used when clustering.",
+                    type=int)
 
 SAVED_MODEL_PATH = os.path.join(".", "models", "exported_models", "centernet512_7000_no_aug", "saved_model")
-
+BASE_LINE_CLUSTERING_FILENAME = "base_line_clusters.txt"
+ADVANCED_CLUSTERING_FILENAME = "advanced_clusters.txt"
 
 def read_parameters(file_path):
   with open(file_path, "r") as file:
@@ -59,25 +74,30 @@ def dump_clustering(clustering, output_dir, filename):
 def main():
   args = parser.parse_args()
 
-  images_path, k = read_parameters(args.parameters_path)
+  ocr_output_path = args.ocr_results
+  od_output_path = args.ob_results
+  k = args.num_clusters
 
-  # Obtain Object detection results
-  object_detection(images_path, 512, SAVED_MODEL_PATH)
+  if args.parameters_path:
+    images_path, num_clusters = read_parameters(args.parameters_path)
+    k = num_clusters
 
-  # Obtain OCR results
-  od_output_path = os.path.join(images_path, "out")
-  ocr_output_path = os.path.join(od_output_path, "ocr")
-  extract_images(images_path, ocr_output_path, od_output_path)
+    # Obtain Object detection results.
+    od_output_path = os.path.join(images_path, "out")
+    object_detection(images_path, 512, SAVED_MODEL_PATH)
 
+    # Obtain OCR results.
+    ocr_output_path = os.path.join(od_output_path, "ocr")
+    extract_images(images_path, ocr_output_path, od_output_path)
 
   clustering0 = method0_clustering(ocr_output_path, k)
   clustering1 = method1_clustering(ocr_output_path, od_output_path, k)
 
   print(clustering0)
-  dump_clustering(clustering0, args.output_path, "base_line_clusters.txt")
+  dump_clustering(clustering0, args.output_path, BASE_LINE_CLUSTERING_FILENAME)
 
   print(clustering1)
-  dump_clustering(clustering1, args.output_path, "advanced_clusters.txt")
+  dump_clustering(clustering1, args.output_path, ADVANCED_CLUSTERING_FILENAME)
 
 if __name__ == "__main__":
   main()
