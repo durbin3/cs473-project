@@ -1,3 +1,4 @@
+import glob
 import os
 import sys
 import tensorflow as tf
@@ -18,35 +19,41 @@ for gpu in tf.config.experimental.list_physical_devices('GPU') : tf.config.exper
 LABEL_MAP = 'dataset/label_map.pbtxt'
 LABELS = ['entity','weak_entity','rel','ident_rel','rel_attr','many','one']
 THRESHOLD = .45
-def object_detection(image_path,size,model_path):
-    if not os.path.exists('./out'): os.makedirs('./out')
-    image = load_image(image_path)
-    image_np = np.array(image)[:,:,:3]
-    image_tensor,scale_factor,small_np = preprocess_image(image,(size,size))
+
+def object_detection(images_dir_path, size, model_path):
+    output_path = os.path.join(images_dir_path, 'out')
+    if not os.path.exists(output_path): os.makedirs(output_path)
+
     model = load_model(model_path)
-    
-    print(f'Detecting objects in {image_path[-7:]}', end='')
-    detections = detect_objects(image_tensor,model,size)
-    detections['detection_boxes'] = detections['detection_boxes'] * scale_factor # upscale the detections to fit the original image
-    num_detections = len(detections['detection_scores'])
-    objects = []
-    for i in range(num_detections):
-        if detections['detection_scores'][i] > THRESHOLD:
-            obj_class_num = detections['detection_classes'][i]
-            obj_class = LABELS[obj_class_num-1]
-            loc = detections['detection_boxes'][i].tolist()
-            objects.append([obj_class,loc])
-    print("\nObjects Found: ", objects)
+    # Perform Inference on every .png image in the input directory.
+    for image_path in glob.glob(images_dir_path + "/*.png"):
+      image = load_image(image_path)
+      image_np = np.array(image)[:,:,:3]
+      image_tensor,scale_factor,small_np = preprocess_image(image,(size,size))
+      
+      print(f'Detecting objects in {image_path[-7:]}', end='')
+      detections = detect_objects(image_tensor,model,size)
+      detections['detection_boxes'] = detections['detection_boxes'] * scale_factor # upscale the detections to fit the original image
+      num_detections = len(detections['detection_scores'])
+      objects = []
+      for i in range(num_detections):
+          if detections['detection_scores'][i] > THRESHOLD:
+              obj_class_num = detections['detection_classes'][i]
+              obj_class = LABELS[obj_class_num-1]
+              loc = detections['detection_boxes'][i].tolist()
+              objects.append([obj_class,loc])
+      print("\nObjects Found: ", objects)
 
-    # Save objects in image into file.
-    out_filename = './out/' + image_path[-7:-4] + '.txt' # ./out/001.txt
-    print("\nWriting objects to: ", out_filename)
-    with open(out_filename, 'w') as out_file:
-      out_file.write(str(objects))
+      # Save objects in image into file.
+      out_filename = os.path.join(output_path, image_path[-7:-4] + '.txt') # OUTPUT_PATH/out/001.txt
+      print("\nWriting objects to: ", out_filename)
+      with open(out_filename, 'w') as out_file:
+        out_file.write(str(objects))
 
-    visualize_detections(detections,image_np,'./out/' + image_path[-7:])
-    print('\tDone')
-    return objects
+      visualize_detections(detections,image_np,'./out_test/' + image_path[-7:])
+      print('\tDone')
+
+    # return objects
 
 def load_model(path):
     print('Loading model...', end='')
@@ -127,7 +134,7 @@ if __name__ == "__main__":
         exit()
 
     model_path = sys.argv[1]
-    image_path = sys.argv[2]
+    images_path = sys.argv[2]
     size = int(sys.argv[3]) if len(sys.argv) == 4 else 512
 
-    object_detection(image_path,size,model_path)
+    object_detection(images_path,size,model_path)

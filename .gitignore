@@ -154,3 +154,7 @@ nvvm
 
 base_line_clusters.txt
 advanced_clusters.txt
+out_*
+parameters.txt
+
+.vscode/*
