@@ -1,7 +1,27 @@
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from sklearn.metrics.cluster import silhouette_score
+from sklearn.metrics.cluster import rand_score
 
+def get_rand_score(pred_clustering_filepath, true_clustering_filepath):
+  def parse_clusters_dict(filepath):
+    clustering_dict = {}
+    with open(filepath) as file:
+      curr_k = 1
+      for cluster in file.readlines():
+        for img_num in cluster.split():
+          clustering_dict[img_num] = curr_k
+        curr_k += 1
+    return sorted(clustering_dict.items(), key=lambda x: x[0])
+
+  true_clustering_dict = parse_clusters_dict(true_clustering_filepath)
+  pred_clustering_dict = parse_clusters_dict(pred_clustering_filepath)
+
+  true_clustering = [x[1] for x in true_clustering_dict]
+  pred_clustering = [x[1] for x in pred_clustering_dict]
+
+  return rand_score(true_clustering, pred_clustering)
+  
 # Saves a line graph of different k values against their within-cluster sum square error
 def graph_distortion_WC_SSE(features, min_k=1, max_k=5):
   k_nums = [i for i in range(min_k, max_k)]

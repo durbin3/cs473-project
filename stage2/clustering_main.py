@@ -16,6 +16,8 @@ import argparse
 import os
 import sys
 from clustering_methods import method0_clustering, method1_clustering
+from utils import get_rand_score
+
 # from "cs473-project.src.od_inference" import object_detection
 
 path_to_project = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
@@ -58,7 +60,7 @@ def read_parameters(file_path):
 
     return images_path, k
 
-def dump_clustering(clustering, output_dir, filename):
+def dump_clustering(clustering, output_filepath):
   sorted_clustering = sorted(clustering.items(), key=lambda x: x[1])
 
   max_k = sorted_clustering[-1][1]
@@ -67,7 +69,7 @@ def dump_clustering(clustering, output_dir, filename):
   for img_num, cluster_num in sorted_clustering:
     output[cluster_num].append(img_num)
 
-  with open(os.path.join(output_dir, filename), "w") as output_file:
+  with open(output_filepath, "w") as output_file:
     for cluster in output:
       output_file.write(", ".join(cluster) + "\n")
 
@@ -93,11 +95,17 @@ def main():
   clustering0 = method0_clustering(ocr_output_path, k)
   clustering1 = method1_clustering(ocr_output_path, od_output_path, k)
 
-  print(clustering0)
-  dump_clustering(clustering0, args.output_path, BASE_LINE_CLUSTERING_FILENAME)
+  clustering0_output_path = os.path.join(args.output_path, BASE_LINE_CLUSTERING_FILENAME)
+  clustering1_output_path = os.path.join(args.output_path, ADVANCED_CLUSTERING_FILENAME)
 
+  print(clustering0)
+  dump_clustering(clustering0, clustering0_output_path)
+  
   print(clustering1)
-  dump_clustering(clustering1, args.output_path, ADVANCED_CLUSTERING_FILENAME)
+  dump_clustering(clustering1, clustering1_output_path)
+
+  true_clustering_path = os.path.join("..", "dataset1_K_4", "dataset1_K_4_clustering.txt")
+  print(get_rand_score(clustering0_output_path, clustering1_output_path))
 
 if __name__ == "__main__":
   main()
