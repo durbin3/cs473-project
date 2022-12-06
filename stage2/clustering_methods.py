@@ -10,7 +10,7 @@ from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.cluster import silhouette_score
 from sklearn.preprocessing import normalize
-
+from utils import graph_distortion_silhouette, graph_distortion_WC_SSE
 
 # Added "ERD_LABEL_" to avoid key collision with words in ocr results.
 ERD_LABELS = ["ERD_LABEL_entity", "ERD_LABEL_weak_entity",
@@ -178,6 +178,10 @@ def method1_clustering(ocr_results_path, ob_results_path, k=0):
 
   df_features = df_ocr_features.join(df_erd_features, on=df_ocr_features.index, how='left')
   df_features = pd.DataFrame(normalize(df_features), index= df_features.index,columns=df_features.columns)
+
+
+  graph_distortion_WC_SSE(df_features)
+  graph_distortion_silhouette(df_features)
 
   if k == 0:
     k = get_optimal_k_silhouette(df_features)

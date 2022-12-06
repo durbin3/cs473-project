@@ -23,7 +23,10 @@ def get_rand_score(pred_clustering_filepath, true_clustering_filepath):
   return rand_score(true_clustering, pred_clustering)
   
 # Saves a line graph of different k values against their within-cluster sum square error
-def graph_distortion_WC_SSE(features, min_k=1, max_k=5):
+def graph_distortion_WC_SSE(features):
+  min_k = 2
+  max_k = features.shape[0]
+
   k_nums = [i for i in range(min_k, max_k)]
   within_cluster_SSEs = []  # Within-cluster sum squared errors
 
@@ -44,6 +47,7 @@ def graph_distortion_WC_SSE(features, min_k=1, max_k=5):
   plt.xlabel("k")
   plt.ylabel("Within-cluster-SSE")
   plt.savefig("graph_Within-cluster-SSE.png")
+  plt.cla()
 
 # Returns the global optimal k based on the silhouette scores and saves
 # the graph of k against silhouette scores as "graph_silhouette_scores.png".
@@ -64,3 +68,4 @@ def graph_distortion_silhouette(features):
   plt.xlabel("k")
   plt.ylabel("silhouette_score")
   plt.savefig("graph_silhouette_scores.png")
+  plt.cla()

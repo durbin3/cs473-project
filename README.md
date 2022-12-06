@@ -75,6 +75,18 @@ Running step:
 - `python src/ocr_main.py -r ./out -o ./out/ocr -i ./dataset/images/raw_images` to extract texts and save it in `out/ocr`
 
 ## Base Clustering
-Run Baseline Clustering based on OCR results saved in `out/ocr/`
-Running step:
-- `python ./stage2/baseClustering.py -r ./out/ocr -k [number of clusters] -o [output result path]`
+Create Parameters.txt with the first line containing the path to the image directory and the second
+line containing the number of clusters. if number of clusters is 0, then the best k will be chosen
+based on the silhouette score.
+
+Example of parameters.txt:
+```
+./path/to/images/dir
+0
+```
+
+Running step (when using parameters.txt):
+- `python ./stage2/baseClustering.py -p [path to parameters.txt] -o [path to output directory]`
+
+To run the clustering on existing object detection results and ocr results:
+- `python ./stage2/baseClustering.py -r [path to ocr output] -b [path to ob output] -k [number of clusters] -o [output result path]`
