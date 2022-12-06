@@ -45,7 +45,8 @@ def object_detection(images_dir_path, size, model_path):
       print("\nObjects Found: ", objects)
 
       # Save objects in image into file.
-      out_filename = os.path.join(output_path, image_path[-7:-4] + '.txt') # OUTPUT_PATH/out/001.txt
+      image_name = os.path.splitext(os.path.basename(image_path))[0]
+      out_filename = os.path.join(output_path, image_name + '.txt') # OUTPUT_PATH/out/001.txt
       print("\nWriting objects to: ", out_filename)
       with open(out_filename, 'w') as out_file:
         out_file.write(str(objects))

@@ -17,6 +17,8 @@ ERD_LABELS = ["ERD_LABEL_entity", "ERD_LABEL_weak_entity",
               "ERD_LABEL_rel", "ERD_LABEL_ident_rel",
               "ERD_LABEL_rel_attr", "ERD_LABEL_many", "ERD_LABEL_one"]
 
+RELATIONSHIP_SUFFIX_DELIMETER = "#"
+
 #######################################################################################
 # Input:                                                                              #
 #       ocr_path = path to ocr result text files                                      #
@@ -25,7 +27,7 @@ ERD_LABELS = ["ERD_LABEL_entity", "ERD_LABEL_weak_entity",
 #       type Dict: key = erd_image_num , value = concatenated string                  #
 #######################################################################################
 
-def ocr_concat_texts(ocr_path):
+def ocr_concat_texts(ocr_path, with_relationship_as_suffix=False):
     ps = PorterStemmer()
     erd_dict = {}
     for txt_file in glob.glob(ocr_path+"/*.txt"):
@@ -33,7 +35,17 @@ def ocr_concat_texts(ocr_path):
         with open(txt_file,"r") as f:
             erd_dict[file_num] = []
             for line in f:
-                erd_dict[file_num].extend(ast.literal_eval(re.search("\[.*\]",line).group()))
+                word_list = ast.literal_eval(re.search("\[.*\]",line).group())
+
+                if with_relationship_as_suffix:
+                    relationship = re.search(": .* \[",line).group()
+                    relationship = relationship[2: len(relationship) - 2]
+                    
+                    # Append relationship suffix to every word in entity's name.
+                    for i in range(len(word_list)):
+                      word_list[i] = " ".join([relationship + RELATIONSHIP_SUFFIX_DELIMETER + sub_word for sub_word in word_list[i].split()])
+
+                erd_dict[file_num].extend(word_list)
 
     return dict(dict(sorted(erd_dict.items())))
 
@@ -45,14 +57,25 @@ def ocr_concat_texts(ocr_path):
 # Output:                                                                             #
 #       ans_df = type DataFrame: DataFrame of processed texts                         #
 #######################################################################################
-def ocr_doc_vectorize(erd_dict):
+def ocr_doc_vectorize(erd_dict, with_relationship_as_suffix=False):
     ps = PorterStemmer()
     erd_list = list(erd_dict.values())
     tmp_erd_string = [" ".join(doc) for doc in erd_list]
 
     ###########stemming###########
     for doc_idx in range(len(tmp_erd_string)):
-        tmp_string = [ps.stem(i) for i in tmp_erd_string[doc_idx].split()]
+        
+        tmp_string = []
+        if with_relationship_as_suffix:
+            # Remove the relationship type suffix before stemming. 
+            # Example input word with relationship: "entity_hello world" 
+            for label in tmp_erd_string[doc_idx].split():
+                # print("label", label)
+                relationship, word = label.split(RELATIONSHIP_SUFFIX_DELIMETER, 1)
+                tmp_string.append(relationship + RELATIONSHIP_SUFFIX_DELIMETER + ps.stem(word))
+        else:
+            tmp_string = [ps.stem(word) for word in tmp_erd_string[doc_idx].split()]
+
         tmp_erd_string[doc_idx] = " ".join(tmp_string)
 
     vectorizer = CountVectorizer(dtype=float)
@@ -160,3 +183,17 @@ def method1_clustering(ocr_results_path, ob_results_path, k=0):
     k = get_optimal_k_silhouette(df_features)
 
   return base_clustering(df_features, k)
+
+def method3_clustering(ocr_results_path, ob_results_path, k=0):
+    text_dict = ocr_concat_texts(ocr_results_path, with_relationship_as_suffix=True)
+    df_ocr_features = ocr_doc_vectorize(text_dict, with_relationship_as_suffix=True)
+
+    df_erd_features = parse_ob_output(ob_results_path)
+
+    df_features = df_ocr_features.join(df_erd_features, on=df_ocr_features.index, how='left')
+    df_features = pd.DataFrame(normalize(df_features), index= df_features.index,columns=df_features.columns)
+
+    if k == 0:
+      k = get_optimal_k_silhouette(df_features)
+
+    return base_clustering(df_features, k)

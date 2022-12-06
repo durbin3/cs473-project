@@ -15,7 +15,7 @@ optional arguments:
 import argparse
 import os
 import sys
-from clustering_methods import method0_clustering, method1_clustering
+from clustering_methods import method0_clustering, method1_clustering, method3_clustering
 from utils import get_rand_score
 
 # from "cs473-project.src.od_inference" import object_detection
@@ -94,9 +94,11 @@ def main():
 
   clustering0 = method0_clustering(ocr_output_path, k)
   clustering1 = method1_clustering(ocr_output_path, od_output_path, k)
+  # clustering3 = method3_clustering(ocr_output_path, od_output_path, k)
 
   clustering0_output_path = os.path.join(args.output_path, BASE_LINE_CLUSTERING_FILENAME)
   clustering1_output_path = os.path.join(args.output_path, ADVANCED_CLUSTERING_FILENAME)
+  # clustering3_output_path = os.path.join(args.output_path, "clustering3.txt")
 
   print(clustering0)
   dump_clustering(clustering0, clustering0_output_path)
@@ -104,8 +106,15 @@ def main():
   print(clustering1)
   dump_clustering(clustering1, clustering1_output_path)
 
-  true_clustering_path = os.path.join("..", "dataset1_K_4", "dataset1_K_4_clustering.txt")
-  print(get_rand_score(clustering0_output_path, clustering1_output_path))
+  # print(clustering3)
+  # dump_clustering(clustering3, clustering3_output_path)
+
+  # dataset_name = "dataset4_K_2"
+  # true_clustering_path = os.path.join(".", "dataset", "clustering_datasets", dataset_name + ".txt")
+
+  # print("clustering0 rand score:", get_rand_score(true_clustering_path, clustering0_output_path))
+  # print("clustering1 rand score:", get_rand_score(true_clustering_path, clustering1_output_path))
+  # print("clustering3 rand score:", get_rand_score(true_clustering_path, clustering3_output_path))
 
 if __name__ == "__main__":
   main()
